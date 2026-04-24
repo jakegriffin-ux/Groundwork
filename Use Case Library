@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Automation Use Cases | Groundwork AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #F5F2ED;
+    --surface: #FFFFFF;
+    --ink: #1C1A16;
+    --ink-muted: #6B6860;
+    --ink-faint: #A8A59F;
+    --green: #2A6044;
+    --green-light: #EAF3EE;
+    --green-border: #9ECFB8;
+    --border: #E2DED7;
+    --radius: 14px;
+  }
+
+  body { font-family: 'DM Sans', system-ui, sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; font-size: 15px; line-height: 1.6; }
+
+  /* ── HEADER ── */
+  header { background: var(--ink); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 60px; position: sticky; top: 0; z-index: 200; }
+  .logo { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 17px; color: #fff; letter-spacing: -0.02em; display: flex; align-items: center; gap: 8px; cursor: pointer; }
+  .logo-mark { width: 24px; height: 24px; background: var(--green); border-radius: 6px; display: flex; align-items: center; justify-content: center; }
+  .logo-mark svg { width: 14px; height: 14px; }
+  .header-cta { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; color: var(--ink); background: #fff; border: none; border-radius: 8px; padding: 7px 16px; cursor: pointer; text-decoration: none; transition: background .15s; }
+  .header-cta:hover { background: #F0EDEA; }
+
+  /* ── HERO ── */
+  .hero { background: var(--ink); padding: 72px 2rem 80px; text-align: center; }
+  .hero-eyebrow { display: inline-block; font-size: 12px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: #7FCFAA; background: rgba(42,96,68,.2); border: 1px solid rgba(42,96,68,.35); border-radius: 20px; padding: 4px 14px; margin-bottom: 24px; }
+  .hero h1 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(36px,5vw,56px); color: #fff; line-height: 1.05; letter-spacing: -.03em; max-width: 700px; margin: 0 auto 20px; }
+  .hero h1 em { font-style: normal; color: #7FCFAA; }
+  .hero p { font-size: 17px; color: #A8A59F; max-width: 520px; margin: 0 auto; line-height: 1.6; }
+
+  /* ── STATS BAR ── */
+  .stats-bar { background: var(--green); padding: 16px 2rem; display: flex; justify-content: center; gap: clamp(24px,5vw,80px); flex-wrap: wrap; }
+  .stat { text-align: center; }
+  .stat-num { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 22px; color: #fff; display: block; }
+  .stat-label { font-size: 12px; font-weight: 500; color: rgba(255,255,255,.65); }
+
+  /* ── MAIN ── */
+  main { max-width: 1160px; margin: 0 auto; padding: 48px 2rem 80px; }
+
+  /* ── FILTERS ── */
+  .filter-bar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 36px; }
+  .filter-label { font-size: 12px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-faint); margin-right: 4px; }
+  .filter-btn { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; color: var(--ink-muted); background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 6px 16px; cursor: pointer; transition: all .15s; }
+  .filter-btn:hover { border-color: var(--green-border); color: var(--ink); }
+  .filter-btn.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+
+  /* ── CARD GRID ── */
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+
+  /* ── CARD ── */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; display: flex; flex-direction: column; gap: 16px; cursor: pointer; transition: transform .18s, box-shadow .18s, border-color .18s; position: relative; overflow: hidden; animation: fadeUp .4s ease both; }
+  .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--card-accent, transparent); border-radius: var(--radius) var(--radius) 0 0; opacity: 0; transition: opacity .18s; }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(28,26,22,.08); border-color: var(--card-accent, var(--border)); }
+  .card:hover::before { opacity: 1; }
+  .card:nth-child(1){animation-delay:.05s} .card:nth-child(2){animation-delay:.1s} .card:nth-child(3){animation-delay:.15s} .card:nth-child(4){animation-delay:.2s} .card:nth-child(5){animation-delay:.25s} .card:nth-child(6){animation-delay:.3s} .card:nth-child(7){animation-delay:.35s} .card:nth-child(8){animation-delay:.4s} .card:nth-child(9){animation-delay:.45s}
+
+  .card-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .card-icon svg { width: 22px; height: 22px; }
+  .card-header { display: flex; align-items: flex-start; gap: 14px; }
+  .card-titles { flex: 1; }
+  .card-category { font-size: 11px; font-weight: 500; letter-spacing: .07em; text-transform: uppercase; margin-bottom: 4px; }
+  .card h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 16px; line-height: 1.25; letter-spacing: -.01em; color: var(--ink); }
+  .card p { font-size: 14px; color: var(--ink-muted); line-height: 1.55; }
+  .card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 16px; border-top: 1px solid var(--border); gap: 12px; }
+  .tools { display: flex; gap: 6px; flex-wrap: wrap; }
+  .tool-tag { font-size: 11px; font-weight: 500; color: var(--ink-muted); background: var(--bg); border: 1px solid var(--border); border-radius: 5px; padding: 3px 8px; }
+  .time-saved { font-size: 12px; font-weight: 500; color: #2B6E4A; background: #E8F5EE; border: 1px solid #B8DECA; border-radius: 20px; padding: 4px 12px; white-space: nowrap; flex-shrink: 0; }
+  .card.hidden { display: none; }
+  .empty-state { grid-column: 1/-1; text-align: center; padding: 60px 20px; color: var(--ink-faint); font-size: 15px; display: none; }
+
+  /* ── GRID CTA ── */
+  .cta-section { background: var(--ink); border-radius: 20px; padding: 56px 40px; text-align: center; margin-top: 64px; }
+  .cta-section h2 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 32px; color: #fff; letter-spacing: -.02em; margin-bottom: 14px; }
+  .cta-section p { color: #A8A59F; font-size: 16px; max-width: 440px; margin: 0 auto 32px; }
+  .cta-btn { display: inline-block; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500; color: #fff; background: var(--green); border: none; border-radius: 10px; padding: 14px 32px; cursor: pointer; text-decoration: none; transition: opacity .15s, transform .15s; }
+  .cta-btn:hover { opacity: .9; transform: translateY(-1px); }
+
+  /* ── DETAIL VIEW ── */
+  #detailView { display: none; animation: fadeUp .3s ease both; }
+
+  .detail-nav { background: var(--ink); border-bottom: 1px solid rgba(255,255,255,.08); }
+  .detail-nav-inner { max-width: 1160px; margin: 0 auto; padding: 0 2rem; display: flex; align-items: center; height: 52px; }
+  .back-btn { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; color: #A8A59F; background: none; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: color .15s; padding: 0; }
+  .back-btn:hover { color: #fff; }
+  .back-btn svg { width: 16px; height: 16px; }
+  .breadcrumb-sep { color: rgba(255,255,255,.2); margin: 0 10px; font-size: 13px; }
+  .breadcrumb-current { font-size: 14px; color: rgba(255,255,255,.5); }
+
+  .detail-hero { background: var(--ink); padding: 48px 2rem 56px; }
+  .detail-hero-inner { max-width: 1160px; margin: 0 auto; }
+  .detail-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; border-radius: 4px; padding: 4px 12px; margin-bottom: 20px; }
+  .detail-h1 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(28px,4vw,46px); color: #fff; letter-spacing: -.025em; line-height: 1.08; max-width: 720px; margin-bottom: 16px; }
+  .detail-subtitle { font-size: 17px; color: #A8A59F; max-width: 560px; line-height: 1.65; margin-bottom: 28px; }
+  .detail-meta { display: flex; gap: 12px; flex-wrap: wrap; }
+
+  .detail-body { max-width: 1160px; margin: 0 auto; padding: 56px 2rem 80px; display: grid; grid-template-columns: 460px 1fr; gap: 64px; align-items: start; }
+
+  /* ── FLOWCHART ── */
+  .flowchart-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 32px 28px; position: sticky; top: 84px; }
+  .flowchart-label { font-size: 11px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 24px; }
+  .flowchart { display: flex; flex-direction: column; align-items: stretch; }
+  .fc-step { border-radius: 10px; padding: 13px 18px; font-size: 13px; line-height: 1.45; font-weight: 400; }
+  .fc-trigger { background: var(--fc-color); color: #fff; text-align: center; border-radius: 30px; padding: 11px 20px; font-weight: 500; font-size: 13px; }
+  .fc-action { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--fc-color); color: var(--ink); }
+  .fc-wait { background: var(--bg); border: 1px dashed var(--border); color: var(--ink-muted); text-align: center; font-size: 12px; }
+  .fc-decision { background: var(--fc-bg); border: 1.5px solid var(--fc-color); color: var(--ink); text-align: center; font-weight: 500; }
+  .fc-result { background: var(--ink); color: #fff; text-align: center; border-radius: 30px; padding: 11px 20px; font-weight: 500; font-size: 13px; }
+  .fc-connector { display: flex; flex-direction: column; align-items: center; padding: 3px 0; }
+  .fc-line { width: 1.5px; height: 16px; background: var(--border); }
+  .fc-arrowhead { width: 0; height: 0; border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 6px solid var(--border); }
+  .fc-branches { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .fc-branch { border-radius: 8px; padding: 9px 12px; font-size: 12px; font-weight: 500; text-align: center; line-height: 1.35; }
+  .fc-branch-yes { background: #E8F5EE; color: #1A5C35; border: 1px solid #B8DECA; }
+  .fc-branch-no { background: var(--bg); color: var(--ink-muted); border: 1px solid var(--border); }
+  .fc-branch-label { font-size: 10px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; opacity: .65; margin-bottom: 3px; }
+
+  /* ── DETAIL CONTENT ── */
+  .detail-content {}
+  .section-label { font-size: 11px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 14px; }
+  .detail-benefits { font-size: 16px; color: var(--ink-muted); line-height: 1.8; margin-bottom: 40px; }
+  .detail-tools { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 36px; }
+  .detail-tool-tag { font-size: 13px; font-weight: 500; color: var(--ink-muted); background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 6px 14px; }
+  .detail-time { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; color: #1A5C35; background: #E8F5EE; border: 1px solid #B8DECA; border-radius: 20px; padding: 6px 16px; margin-bottom: 40px; }
+  .detail-cta { display: inline-flex; align-items: center; gap: 10px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500; color: #fff; background: var(--green); border: none; border-radius: 10px; padding: 14px 28px; cursor: pointer; text-decoration: none; transition: opacity .15s, transform .15s; }
+  .detail-cta:hover { opacity: .9; transform: translateY(-1px); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 860px) {
+    .detail-body { grid-template-columns: 1fr; gap: 40px; }
+    .flowchart-wrap { position: static; }
+    main { padding: 32px 1.25rem 60px; }
+    .hero { padding: 48px 1.25rem 56px; }
+    .detail-hero { padding: 36px 1.25rem 44px; }
+    .detail-body { padding: 36px 1.25rem 60px; }
+    .cta-section { padding: 40px 24px; }
+    .card-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo" onclick="goHome()">
+    <div class="logo-mark">
+      <svg viewBox="0 0 14 14" fill="none"><rect x="1" y="7" width="4" height="6" rx="1" fill="white"/><rect x="5" y="4" width="4" height="9" rx="1" fill="white" opacity=".7"/><rect x="9" y="1" width="4" height="12" rx="1" fill="white" opacity=".45"/></svg>
+    </div>
+    Groundwork AI
+  </div>
+  <a href="#" class="header-cta">Book a free audit →</a>
+</header>
+
+<!-- ═══════════════════════════════ GRID VIEW ═══════════════════════════════ -->
+<div id="gridView">
+  <section class="hero">
+    <div class="hero-eyebrow">Automation Library</div>
+    <h1>Real automations.<br><em>Real time back.</em></h1>
+    <p>Browse use cases built for small businesses. Each one is ready to deploy in days — not months.</p>
+  </section>
+  <div class="stats-bar">
+    <div class="stat"><span class="stat-num">9</span><span class="stat-label">Ready-to-deploy automations</span></div>
+    <div class="stat"><span class="stat-num">31 hrs</span><span class="stat-label">Average weekly hours reclaimed</span></div>
+    <div class="stat"><span class="stat-num">2–5 days</span><span class="stat-label">Typical implementation time</span></div>
+  </div>
+  <main>
+    <div class="filter-bar">
+      <span class="filter-label">Filter by</span>
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="sales">Sales</button>
+      <button class="filter-btn" data-filter="operations">Operations</button>
+      <button class="filter-btn" data-filter="customer-service">Customer Service</button>
+      <button class="filter-btn" data-filter="marketing">Marketing</button>
+      <button class="filter-btn" data-filter="hr">HR</button>
+    </div>
+
+    <div class="card-grid" id="cardGrid">
+      <div class="card" data-category="operations" data-id="invoice" style="--card-accent:#2A6044">
+        <div class="card-header">
+          <div class="card-icon" style="background:#EAF3EE">
+            <svg viewBox="0 0 22 22" fill="none"><rect x="3" y="2" width="13" height="17" rx="2" stroke="#2A6044" stroke-width="1.5"/><path d="M7 8h6M7 11h4M7 14h5" stroke="#2A6044" stroke-width="1.5" stroke-linecap="round"/><circle cx="17" cy="16" r="4" fill="#2A6044"/><path d="M17 14.5v1.5l1 1" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="card-titles">
+            <div class="card-category" style="color:#2A6044">Operations</div>
+            <h3>Stop chasing unpaid invoices</h3>
+          </div>
+        </div>
+        <p>Automatically send polite payment reminders at 7, 14, and 30 days overdue — with escalating urgency and a one-click pay link.</p>
+        <div class="card-footer"><div class="tools"><span class="tool-tag">Zapier</span><span class="tool-tag">Gmail</span><span class="tool-tag">QuickBooks</span></div><span class="time-saved">↑ 3 hrs/week</span></div>
+      </div>
+
+      <div class="card" data-category="sales" data-id="lead-followup" style="--card-accent:#185FA5">
+        <div class="card-header">
+          <div class="card-icon" style="background:#E6F1FB">
+            <svg viewBox="0 0 22 22" fill="none"><circle cx="9" cy="7" r="4" stroke="#185FA5" stroke-width="1.5"/><path d="M3 19c0-3.314 2.686-6 6-6" stroke="#185FA5" stroke-width="1.5" stroke-linecap="round"/><path d="M16 12l2 2 3-3" stroke="#185FA5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="15" r="4" fill="none" stroke="#185FA5" stroke-width="1.5"/></svg>
+          </div>
+          <div class="card-titles">
+            <div class="card-category" style="color:#185FA5">Sales</div>
+            <h3>Never let a hot lead go cold</h3>
+          </div>
+        </div>
+        <p>When a new lead fills out a form, they get a personalized reply in minutes — and a follow-up sequence fires automatically if they don't respond.</p>
+        <div class="card-footer"><div class="tools"><span class="tool-tag">HubSpot</span><span class="tool-tag">Gmail</span><span class="tool-tag">Claude AI</span></div><span class="time-saved">↑ 2 hrs/week</span></div>
+      </div>
+
+      <div class="card" data-category="operations" data-id="appointment" style="--card-accent:#2A6044">
+        <div class="card-header">
+          <div class="card-icon" style="background:#EAF3EE">
+            <svg viewBox="0 0 22 22" fill="none"><rect x="3" y="4" width="16" height="15" rx="2" stroke="#2A6044" stroke-width="1.5"/><path d="M7 2v3M15 2v3M3 9h16" stroke="#2A6044" stroke-width="1.5" stroke-linecap="round"/><circle cx="11" cy="14" r="3" fill="#2A6044"/><path d="M11 12.5v1.5l.8.8" stroke="white" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="card-titles">
+            <div class="card-category" style="color:#2A6044">Operations</div>
+            <h3>Automate appointment reminders</h3>
+          </div>
+        </div>
+        <p>Send automatic SMS and email reminders 48 hrs and 2 hrs before every appointment. Reduce no-shows without picking up the phone.</p>
+        <div class="card-footer"><div class="tools"><span class="tool-tag">Calendly</span><span class="tool-tag">Twilio</span><span class="tool-tag">Gmail</span></div><span class="time-saved">↑ 5 hrs/week</span></div>
+      </div>
+
+      <div class="card" data-category="marketing" data-id="reviews" style="--card-accent:#993556">
+        <div class="card-header">
+          <div class="card-icon" style="background:#FBEAF0">
+            <svg viewBox="0 0 22 22" fill="none"><path d="M11 2l2.472 5.011L19 7.764l-4 3.898.944 5.505L11 14.5l-4.944 2.667L7 11.662 3 7.764l5.528-.753L11 2z" stroke="#993556" stroke-width="1.5" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="card-titles">
+            <div class="card-category" style="color:#993556">Marketing</div>
+            <h3>Request reviews after every job</h3>
+          </div>
+        </div>
+        <p>One day after a service is marked complete, send a friendly review request to Google or Yelp. More 5-star reviews on autopilot.</p>
+        <div class="card-footer"><div class="tools"><span class="tool-tag">Zapier</span><span class="tool-tag">Gmail</span><span class="tool-tag">Google</span></div><span class="time-saved">↑ 1 hr/week</span></div>
+      </div>
+
+      <div class="card" data-category="sales" data-id="lead-crm" style="--card-accent:#185FA5">
+        <div class="card-header">
+          <div class="card-icon" style="background:#E6F1FB">
+            <svg viewBox="0 0 22 22" fill="none"><rect x="2" y="5" width="9" height="7" rx="1.5" stroke="#185FA5" stroke-width="1.5"/><path d="M11 8.5h4l3 3v5H11V8.5z" stroke="#185FA5" stroke-width="1.5" stroke-linejoin="round"/><path d="M11 16.5H4v-4h7" stroke="#185FA5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="15" cy="6" r="2.5" fill="#185FA5"/><path d="M14.3 6l.7.7 1.2-1.2" stroke="white" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="card-titles">
+            <div class="card-category" style="color:#185FA5">Sales</div>
+            <h3>Turn every inquiry into a CRM contact</h3>
+          </div>
+        </div>
+        <p>New form submission? New call log? New email inquiry? Every prospect gets automatically added to your CRM with the right tags and owner.</p>
+        <div class="card-footer"><div class="tools"><span class="tool-tag">Typeform</span><span class="tool-tag">HubSpot</span><span class="tool-tag">Make</span></div><span class="time-saved">↑ 4 hrs/week</span></div>
+      </div>
+
+      <div class="card" data-category="operations" data-id="reports" style="--card-accent:#2A6044">
+        <div class="card-header">
+          <div class="card-icon" style="background:#EAF3EE">
+            <svg viewBox="0 0 22 22" fill="none"><rect x="2" y="3" width="18" height="16" rx="2" stroke="#2A6044" stroke-width="1.5"/><path d="M6 15l3-4 3 2.5 3-5" stroke="#2A6044" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 7h10" stroke="#2A6044" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="card-titles">
+            <div class="card-category" style="color:#2A6044">Operations</div>
+            <h3>Generate weekly reports automatically</h3>
+          </div>
+        </div>
+        <p>Every Monday morning, pull the numbers from your tools, compile a snapshot report, and deliver it to your inbox — no spreadsheet wrangling.</p>
+        <div class="card-footer"><div class="tools"><span class="tool-tag">Google Sheets</span><span class="tool-tag">Claude AI</span><span class="tool-tag">Gmail</span></div><span class="time-saved">↑ 3 hrs/week</span></div>
+      </div>
+
+      <div class="card" data-category="customer-service" data-id="chatbot" style="--card-accent:#3B6D11">
+        <div class="card-header">
+          <div class="card-icon" style="background:#EAF3DE">
+            <svg viewBox="0 0 22 22" fill="none"><rect x="3" y="3" width="16" height="12" rx="2" stroke="#3B6D11" stroke-width="1.5"/><path d="M7 18l4-3h3" stroke="#3B6D11" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="8" cy="9" r="1" fill="#3B6D11"/><circle cx="11" cy="9" r="1" fill="#3B6D11"/><circle cx="14" cy="9" r="1" fill="#3B6D11"/></svg>
+          </div>
+          <div class="card-titles">
+            <div class="card-category" style="color:#3B6D11">Customer Service</div>
+            <h3>Answer FAQs 24/7 without lifting a finger</h3>
+          </div>
+        </div>
+        <p>An AI assistant trained on your business answers common questions on your website around the clock — pricing, hours, services, and more.</p>
+        <div class="card-footer"><div class="tools"><span class="tool-tag">Claude AI</span><span class="tool-tag">Intercom</span><span class="tool-tag">Notion</span></div><span class="time-saved">↑ 6 hrs/week</span></div>
+      </div>
+
+      <div class="card" data-category="hr" data-id="onboarding" style="--card-accent:#534AB7">
+        <div class="card-header">
+          <div class="card-icon" style="background:#EEEDFE">
+            <svg viewBox="0 0 22 22" fill="none"><circle cx="9" cy="7" r="3.5" stroke="#534AB7" stroke-width="1.5"/><path d="M3 19c0-3.314 2.686-6 6-6s6 2.686 6 6" stroke="#534AB7" stroke-width="1.5" stroke-linecap="round"/><path d="M16 11l1.5 1.5L20 9" stroke="#534AB7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="card-titles">
+            <div class="card-category" style="color:#534AB7">HR</div>
+            <h3>Onboard new hires without the chaos</h3>
+          </div>
+        </div>
+        <p>The moment you add a new hire, a complete onboarding checklist fires — welcome email, account setup requests, day-one schedule, all automatically.</p>
+        <div class="card-footer"><div class="tools"><span class="tool-tag">Gusto</span><span class="tool-tag">Slack</span><span class="tool-tag">Google Workspace</span></div><span class="time-saved">↑ 4 hrs/hire</span></div>
+      </div>
+
+      <div class="card" data-category="marketing" data-id="social" style="--card-accent:#993556">
+        <div class="card-header">
+          <div class="card-icon" style="background:#FBEAF0">
+            <svg viewBox="0 0 22 22" fill="none"><rect x="3" y="3" width="16" height="16" rx="4" stroke="#993556" stroke-width="1.5"/><circle cx="11" cy="11" r="3.5" stroke="#993556" stroke-width="1.5"/><circle cx="16" cy="6.5" r="1" fill="#993556"/></svg>
+          </div>
+          <div class="card-titles">
+            <div class="card-category" style="color:#993556">Marketing</div>
+            <h3>Post to social media on autopilot</h3>
+          </div>
+        </div>
+        <p>Drop a topic or a few bullet points into a shared doc. AI drafts the posts, formats them per platform, and schedules them for the best times.</p>
+        <div class="card-footer"><div class="tools"><span class="tool-tag">Claude AI</span><span class="tool-tag">Buffer</span><span class="tool-tag">Google Docs</span></div><span class="time-saved">↑ 3 hrs/week</span></div>
+      </div>
+
+      <div class="empty-state" id="emptyState">No automations match that filter yet — more coming soon.</div>
+    </div>
+
+    <div class="cta-section">
+      <h2>See what's possible for your business</h2>
+      <p>Book a free 30-minute audit. We'll map out which automations would make the biggest difference for you.</p>
+      <a href="#" class="cta-btn">Book your free audit →</a>
+    </div>
+  </main>
+</div>
+
+<!-- ══════════════════════════════ DETAIL VIEW ══════════════════════════════ -->
+<div id="detailView">
+  <div class="detail-nav">
+    <div class="detail-nav-inner">
+      <button class="back-btn" onclick="goHome()">
+        <svg viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        All automations
+      </button>
+      <span class="breadcrumb-sep">/</span>
+      <span class="breadcrumb-current" id="breadcrumbTitle"></span>
+    </div>
+  </div>
+
+  <div class="detail-hero">
+    <div class="detail-hero-inner">
+      <div class="detail-eyebrow" id="detailEyebrow"></div>
+      <h1 class="detail-h1" id="detailTitle"></h1>
+      <p class="detail-subtitle" id="detailSubtitle"></p>
+      <div class="detail-meta" id="detailMeta"></div>
+    </div>
+  </div>
+
+  <div class="detail-body">
+    <div>
+      <div class="flowchart-wrap">
+        <div class="flowchart-label">How it works</div>
+        <div class="flowchart" id="detailFlowchart"></div>
+      </div>
+    </div>
+    <div class="detail-content">
+      <div class="section-label">Why it matters</div>
+      <p class="detail-benefits" id="detailBenefits"></p>
+      <div class="section-label">Tools used</div>
+      <div class="detail-tools" id="detailTools"></div>
+      <div class="section-label" style="margin-top:8px">Time reclaimed</div>
+      <div class="detail-time" id="detailTime"></div>
+      <br><br>
+      <a href="#" class="detail-cta">Want this for your business? Book a free audit →</a>
+    </div>
+  </div>
+</div>
+
+<script>
+const AUTOMATIONS = {
+  'invoice': {
+    category: 'Operations', color: '#2A6044', lightBg: '#EAF3EE',
+    title: 'Stop chasing unpaid invoices',
+    subtitle: 'Automated payment reminders that escalate on their own — without any awkward manual follow-up.',
+    timeSaved: '↑ 3 hours saved per week',
+    tools: ['Zapier', 'Gmail', 'QuickBooks'],
+    benefits: `Most small businesses lose thousands of dollars a year not because clients refuse to pay, but because following up consistently is uncomfortable and easy to forget. This automation watches your invoicing software for overdue balances and sends a professionally-worded sequence of reminders — friendly at first, firmer as time goes on — each with a direct payment link and the exact amount owed. Once it's set up, it runs automatically for every invoice, every time, without you having to think about it or feel awkward about it.`,
+    steps: [
+      { type: 'trigger', text: 'New invoice sent via QuickBooks' },
+      { type: 'action', text: 'Zapier monitors invoice for payment status' },
+      { type: 'wait', text: '7 days — no payment detected' },
+      { type: 'action', text: 'Gmail sends Reminder #1 with pay link (friendly tone)' },
+      { type: 'wait', text: '7 more days' },
+      { type: 'decision', text: 'Payment received?', yes: 'Invoice closed ✓', no: 'Escalate sequence' },
+      { type: 'action', text: 'Reminder #2 sent — firmer tone, amount highlighted' },
+      { type: 'wait', text: '16 more days (30 days overdue total)' },
+      { type: 'action', text: 'Final notice sent — team notified to call directly' },
+      { type: 'result', text: 'Invoice resolved — zero manual follow-up' }
+    ]
+  },
+  'lead-followup': {
+    category: 'Sales', color: '#185FA5', lightBg: '#E6F1FB',
+    title: 'Never let a hot lead go cold',
+    subtitle: 'Respond to every new inquiry within minutes and follow up automatically if they go quiet.',
+    timeSaved: '↑ 2 hours saved per week',
+    tools: ['HubSpot', 'Gmail', 'Claude AI'],
+    benefits: `The window to impress a new prospect is small. Research shows leads are 9x more likely to convert if you respond within five minutes — but that's nearly impossible to do manually when you're running a business. This automation fires the moment someone submits a form, uses Claude AI to write a personalized reply using their own words, and sends it before they've even closed the tab. If they go quiet, a follow-up sequence handles the nudges so no opportunity slips through the cracks.`,
+    steps: [
+      { type: 'trigger', text: 'New contact form submitted on your website' },
+      { type: 'action', text: 'Claude AI reads inquiry and personalizes a reply' },
+      { type: 'action', text: 'Gmail sends reply within 5 minutes of submission' },
+      { type: 'wait', text: '48 hours — no response' },
+      { type: 'decision', text: 'Did they reply?', yes: 'Moved to discovery call ✓', no: 'Follow-up sequence fires' },
+      { type: 'action', text: 'Day 3: Check-in email with relevant value point' },
+      { type: 'action', text: 'Day 7: Final outreach with low-friction offer' },
+      { type: 'result', text: 'Lead tagged and added to sales pipeline' }
+    ]
+  },
+  'appointment': {
+    category: 'Operations', color: '#2A6044', lightBg: '#EAF3EE',
+    title: 'Automate appointment reminders',
+    subtitle: 'Cut no-shows dramatically with perfectly timed SMS and email reminders — sent without lifting a finger.',
+    timeSaved: '↑ 5 hours saved per week',
+    tools: ['Calendly', 'Twilio', 'Gmail'],
+    benefits: `Phone tag is the silent killer of service businesses. The average no-show costs $50–200 in lost revenue, plus the scheduling time wasted on both sides. This automation sends reminders at exactly the right intervals — 48 hours out via both email and SMS, then again two hours before — and automatically sends a reschedule link if someone doesn't show. You'll see fewer no-shows starting the very first week it's live, and you'll never have to manually send "just a reminder" again.`,
+    steps: [
+      { type: 'trigger', text: 'Appointment booked in Calendly' },
+      { type: 'action', text: 'Confirmation email sent immediately' },
+      { type: 'wait', text: '48 hours before appointment time' },
+      { type: 'action', text: 'SMS + email reminder sent via Twilio & Gmail' },
+      { type: 'wait', text: 'Day of — 2 hours before' },
+      { type: 'action', text: 'Final SMS reminder sent' },
+      { type: 'decision', text: 'Client showed up?', yes: 'Appointment complete ✓', no: 'Reschedule link auto-sent' },
+      { type: 'result', text: 'No-show rate reduced — no calls needed' }
+    ]
+  },
+  'reviews': {
+    category: 'Marketing', color: '#993556', lightBg: '#FBEAF0',
+    title: 'Request reviews after every job',
+    subtitle: 'Turn happy customers into 5-star reviews automatically — every time, without the awkward ask.',
+    timeSaved: '↑ 1 hour saved per week',
+    tools: ['Zapier', 'Gmail', 'Google Business'],
+    benefits: `More than 90% of customers read reviews before choosing a local business — but most satisfied customers never leave one unless they're prompted at exactly the right moment. This automation sends a friendly, personal-feeling review request exactly 24 hours after a job is marked complete, when the experience is still fresh and positive. It takes one minute to set up, and from that point on it runs every single time you finish a job — with zero effort from you.`,
+    steps: [
+      { type: 'trigger', text: 'Job marked "Complete" in your system' },
+      { type: 'wait', text: '24 hours' },
+      { type: 'action', text: 'Personalized review request email sent via Gmail' },
+      { type: 'action', text: 'Direct link to Google Business profile included' },
+      { type: 'wait', text: '3 days — no review left' },
+      { type: 'decision', text: 'Review received?', yes: 'New 5-star review live ✓', no: 'One friendly follow-up sent' },
+      { type: 'result', text: 'Review requested every time — automatically' }
+    ]
+  },
+  'lead-crm': {
+    category: 'Sales', color: '#185FA5', lightBg: '#E6F1FB',
+    title: 'Turn every inquiry into a CRM contact',
+    subtitle: 'Capture leads from every channel and get them into your CRM within minutes — automatically.',
+    timeSaved: '↑ 4 hours saved per week',
+    tools: ['Typeform', 'HubSpot', 'Make'],
+    benefits: `A lead that doesn't make it into your CRM is a lead you'll eventually forget. Whether an inquiry comes in through your website, a forwarded email, or a logged phone call, this automation captures the contact, fills in the right fields, assigns them to the right team member, and fires off an internal notification — all within two minutes. No more sticky notes, no more "I'll add it later," and no more leads falling through the cracks because someone was busy.`,
+    steps: [
+      { type: 'trigger', text: 'New inquiry arrives (form, email, or phone log)' },
+      { type: 'action', text: 'Make extracts name, email, phone, and inquiry type' },
+      { type: 'decision', text: 'Already in CRM?', yes: 'Existing record updated ✓', no: 'New contact created' },
+      { type: 'action', text: 'Tagged by source, service type, and date' },
+      { type: 'action', text: 'Assigned to the right team member' },
+      { type: 'action', text: 'Team notified via email or Slack' },
+      { type: 'result', text: 'Lead in CRM within 2 minutes — every time' }
+    ]
+  },
+  'reports': {
+    category: 'Operations', color: '#2A6044', lightBg: '#EAF3EE',
+    title: 'Generate weekly reports automatically',
+    subtitle: 'Get a clean business snapshot in your inbox every Monday — with zero manual data pulling.',
+    timeSaved: '↑ 3 hours saved per week',
+    tools: ['Google Sheets', 'Claude AI', 'Gmail'],
+    benefits: `You're running a business — you shouldn't have to spend Monday morning manually pulling numbers from five different tools just to understand how last week went. This automation queries your connected tools, feeds the data to Claude AI to surface what actually matters, and drops a clean, readable report in your inbox before your first coffee. No spreadsheet wrangling, no copy-pasting from dashboards — just the insight, delivered.`,
+    steps: [
+      { type: 'trigger', text: 'Every Monday at 7:00 AM' },
+      { type: 'action', text: 'Connected tools queried for last week\'s data' },
+      { type: 'action', text: 'Numbers pulled from Sheets, CRM, and more' },
+      { type: 'action', text: 'Claude AI analyzes data and surfaces key trends' },
+      { type: 'action', text: 'Clean, readable report formatted and assembled' },
+      { type: 'result', text: 'Weekly snapshot in your inbox — no manual work' }
+    ]
+  },
+  'chatbot': {
+    category: 'Customer Service', color: '#3B6D11', lightBg: '#EAF3DE',
+    title: 'Answer FAQs 24/7 without lifting a finger',
+    subtitle: 'A custom AI trained on your business handles common questions around the clock — so your team doesn\'t have to.',
+    timeSaved: '↑ 6 hours saved per week',
+    tools: ['Claude AI', 'Intercom', 'Notion'],
+    benefits: `Your website gets questions 24 hours a day, but your team doesn't work 24 hours a day. This automation deploys an AI assistant trained on your actual business — your prices, your services, your policies, your FAQs — that answers common questions instantly, at any hour. When something falls outside its knowledge, it escalates gracefully to a human or captures the visitor's contact info. Your team wakes up to answered customers, not a queue of unanswered messages.`,
+    steps: [
+      { type: 'trigger', text: 'Visitor types a question on your website' },
+      { type: 'action', text: 'AI checks your business knowledge base (Notion)' },
+      { type: 'decision', text: 'Answer found?', yes: 'Instant reply sent in < 2s ✓', no: 'Escalate or capture email' },
+      { type: 'action', text: 'Question logged for continuous improvement' },
+      { type: 'action', text: 'If a lead, conversation summary saved to CRM' },
+      { type: 'result', text: 'Customer helped 24/7 — team stays focused' }
+    ]
+  },
+  'onboarding': {
+    category: 'HR', color: '#534AB7', lightBg: '#EEEDFE',
+    title: 'Onboard new hires without the chaos',
+    subtitle: 'Every new hire triggers a complete setup sequence automatically — before Day 1 even starts.',
+    timeSaved: '↑ 4 hours saved per hire',
+    tools: ['Gusto', 'Slack', 'Google Workspace'],
+    benefits: `The first week for a new hire sets the tone for everything that follows — but for most small businesses, onboarding is a scramble of forgotten steps, last-minute account setups, and scattered emails. This automation fires the moment a new hire is added to your payroll system: welcome email out, Google Workspace account created, Slack channels joined, week-one schedule delivered, and manager notified. Your new employee shows up prepared. Your team doesn't have to chase a checklist.`,
+    steps: [
+      { type: 'trigger', text: 'New hire added to Gusto payroll' },
+      { type: 'action', text: 'Personalized welcome email sent with Day 1 details' },
+      { type: 'action', text: 'Google Workspace account created automatically' },
+      { type: 'action', text: 'Slack invite sent to all relevant channels' },
+      { type: 'action', text: 'Week 1 checklist created in project management tool' },
+      { type: 'action', text: 'Manager sent onboarding summary and reminders' },
+      { type: 'result', text: 'New hire fully set up before Day 1' }
+    ]
+  },
+  'social': {
+    category: 'Marketing', color: '#993556', lightBg: '#FBEAF0',
+    title: 'Post to social media on autopilot',
+    subtitle: 'Drop a topic into a shared doc and AI does everything else — drafting, formatting, and scheduling.',
+    timeSaved: '↑ 3 hours saved per week',
+    tools: ['Claude AI', 'Buffer', 'Google Docs'],
+    benefits: `Consistency on social media builds the kind of trust that turns followers into customers — but posting consistently is one of the first things to slip when you're busy running a business. This automation cuts the friction to almost zero: drop a topic or a few bullet points into a shared Google Doc, and Claude drafts platform-specific posts, formatted correctly for LinkedIn, Instagram, and Facebook, then hands them to Buffer to schedule at the best times. You stay visible without it taking over your day.`,
+    steps: [
+      { type: 'trigger', text: 'Topic or bullet points dropped in Google Doc' },
+      { type: 'action', text: 'Claude AI drafts posts for each platform' },
+      { type: 'action', text: 'LinkedIn, Instagram, Facebook — each uniquely formatted' },
+      { type: 'action', text: 'Optimal posting times calculated by Buffer' },
+      { type: 'decision', text: 'Review before posting?', yes: 'Draft sent for your approval ✓', no: 'Posts scheduled automatically' },
+      { type: 'result', text: 'Consistent social presence — no daily effort' }
+    ]
+  }
+};
+
+function renderFlowchart(steps, color, lightBg) {
+  const cs = `style="--fc-color:${color};--fc-bg:${lightBg}"`;
+  let html = '';
+  steps.forEach((step, i) => {
+    if (i > 0) {
+      html += `<div class="fc-connector"><div class="fc-line"></div><div class="fc-arrowhead"></div></div>`;
+    }
+    if (step.type === 'trigger') {
+      html += `<div class="fc-step fc-trigger" ${cs}>${step.text}</div>`;
+    } else if (step.type === 'action') {
+      html += `<div class="fc-step fc-action" ${cs}>${step.text}</div>`;
+    } else if (step.type === 'wait') {
+      html += `<div class="fc-step fc-wait" ${cs}>${step.text}</div>`;
+    } else if (step.type === 'decision') {
+      html += `<div class="fc-step fc-decision" ${cs}>${step.text}</div>`;
+      html += `<div class="fc-connector"><div class="fc-line"></div><div class="fc-arrowhead"></div></div>`;
+      html += `<div class="fc-branches">`;
+      html += `<div class="fc-branch fc-branch-yes"><div class="fc-branch-label">If yes</div>${step.yes}</div>`;
+      html += `<div class="fc-branch fc-branch-no"><div class="fc-branch-label">If no</div>${step.no}</div>`;
+      html += `</div>`;
+    } else if (step.type === 'result') {
+      html += `<div class="fc-step fc-result" ${cs}>${step.text}</div>`;
+    }
+  });
+  return html;
+}
+
+function openDetail(id) {
+  const a = AUTOMATIONS[id];
+  if (!a) return;
+
+  document.getElementById('breadcrumbTitle').textContent = a.title;
+  document.getElementById('detailEyebrow').textContent = a.category;
+  document.getElementById('detailEyebrow').style.cssText = `background:${a.lightBg};color:${a.color};`;
+  document.getElementById('detailTitle').textContent = a.title;
+  document.getElementById('detailSubtitle').textContent = a.subtitle;
+  document.getElementById('detailBenefits').textContent = a.benefits;
+  document.getElementById('detailFlowchart').innerHTML = renderFlowchart(a.steps, a.color, a.lightBg);
+
+  const toolsEl = document.getElementById('detailTools');
+  toolsEl.innerHTML = a.tools.map(t => `<span class="detail-tool-tag">${t}</span>`).join('');
+
+  document.getElementById('detailTime').innerHTML = `<span style="font-size:16px">↑</span> ${a.timeSaved.replace('↑ ', '')}`;
+
+  document.getElementById('gridView').style.display = 'none';
+  document.getElementById('detailView').style.display = 'block';
+  window.scrollTo(0, 0);
+}
+
+function goHome() {
+  document.getElementById('detailView').style.display = 'none';
+  document.getElementById('gridView').style.display = 'block';
+  window.scrollTo(0, 0);
+}
+
+document.querySelectorAll('.card[data-id]').forEach(card => {
+  card.addEventListener('click', () => openDetail(card.dataset.id));
+});
+
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const filter = btn.dataset.filter;
+    let count = 0;
+    document.querySelectorAll('.card[data-category]').forEach(card => {
+      const show = filter === 'all' || card.dataset.category === filter;
+      card.classList.toggle('hidden', !show);
+      if (show) count++;
+    });
+    document.getElementById('emptyState').style.display = count === 0 ? 'block' : 'none';
+  });
+});
+</script>
+</body>
+</html>
